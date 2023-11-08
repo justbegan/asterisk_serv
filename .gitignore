@@ -1,0 +1,8 @@
+*.sqlite3
+.env
+venv
+*.pyc
+/db-data
+debug.log
+/static
+/token

@@ -27,7 +27,7 @@ class Send_email(APIView):
         subject = phone
         message = text
         from_email = 'noreply@sakha.gov.ru'
-        recipient_list = ['justbegan@mail.ru']
+        recipient_list = ['rpgu@sakha.gov.ru']
         try:
             st = Statements(text=text, phone=phone)
             st.save()

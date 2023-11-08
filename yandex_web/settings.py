@@ -54,7 +54,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'yandex_web.wsgi.application'
-
+CSRF_TRUSTED_ORIGINS = [
+    'http://10.18.8.14',
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

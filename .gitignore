@@ -1,6 +1,6 @@
 *.sqlite3
 .env
-venv
+/venv
 *.pyc
 /db-data
 debug.log

@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  db_project:
-    hostname: db_project
+  db:
+    hostname: db
     image: postgres:12-alpine
     volumes:
       - ./db-data:/var/lib/postgresql/data
@@ -11,15 +11,4 @@ services:
       - config/.envfile
     ports:
       - "5432:5432"
-    container_name: db_project
-
-  web:
-    build: .
-    command: gunicorn yandex_web.wsgi:application -w 5 -b 0.0.0.0:8050
-    volumes:
-      - .:/code
-    ports:
-      - "8050:8050"
-    depends_on:
-      - db_project
-    container_name: web
+    container_name: db

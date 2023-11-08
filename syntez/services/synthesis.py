@@ -46,17 +46,15 @@ def synthesize(text: str) -> requests:
 
 
 def get_token():
-    with open('token.json', 'r') as json_file:
+    with open('token/token.json', 'r') as json_file:
         data = json.load(json_file)
     date_str = data['expiresAt']
     rounded_date_str = date_str[:23] + date_str[26:29] + date_str[-1]
     date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
     date_obj = datetime.strptime(rounded_date_str, date_format)
     if datetime.now() < date_obj:
-        print("Старый токен")
         return data['iamToken']
     else:
-        print("Новый токен")
         create_iam()
         return data['iamToken']
 
@@ -65,7 +63,7 @@ def get_jwt() -> str:
     """
     Получает по статичным токенам и закрытому ключу JWT Токен
     """
-    with open("priv.pem", 'r') as private:
+    with open("token/priv.pem", 'r') as private:
         private_key = private.read()  # Чтение закрытого ключа из файла.
     now = int(time.time())
     payload = {
@@ -92,14 +90,14 @@ def create_iam():
     }
 
     data = {
-        'jwt': get_jwt()  # Предполагается, что у вас есть функция get_jwt(), которая возвращает JWT.
+        'jwt': get_jwt()
     }
 
     try:
         response = requests.post(url, headers=headers, json=data)
         response_data = json.loads(response.text)
 
-        with open('token.json', "w") as json_file:
+        with open('token/token.json', "w") as json_file:
             json.dump(response_data, json_file, indent=4)
     except requests.exceptions.RequestException as e:
         print(f"Ошибка при выполнении запроса: {e}")

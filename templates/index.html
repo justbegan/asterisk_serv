@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="/static/cdn/vuetify.min.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+        <title>Yandex speechkit test</title>
+        <link rel="icon" type="image/x-icon" href="/static/icons/logo.png">
+    </head>
+
+
+    <body>
+    {% csrf_token %} 
+    {% verbatim %}
+    <div id="vue_app">
+
+        <v-container>
+            <v-textarea name="input-7-1" label="Default style" v-model="text" hint="Hint text" ></v-textarea>
+            <v-btn @click="get_file"> Получить </v-btn>
+        </v-container>
+     
+    </div>
+    {% endverbatim %}
+    {% comment %} <script src="/static/cdn/vue.min.js"></script> {% endcomment %}
+    <script src="/static/cdn/vue.js"></script> 
+    <script src="/static/cdn/vuetify.min.js"></script>
+  
+<script>
+    let csrf_token = "{{ csrf_token }}";
+    const app = new Vue({
+        el: '#vue_app',
+        vuetify: new Vuetify(),
+        data: {
+            text: '',
+        },
+        methods:{
+            get_file: async function () {
+                let url = '/api/v1/get_file?text=' + this.text;
+                window.open(url, '_blank');
+            }
+        },
+        computed: {
+        },
+        mounted: function async(){
+
+        },
+    })
+</script>
+</body>
+</html>

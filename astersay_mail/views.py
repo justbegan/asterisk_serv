@@ -3,9 +3,13 @@ from django.core.mail import send_mail
 from .models import Statements
 from rest_framework.authentication import SessionAuthentication
 import logging
-
+from django.shortcuts import render
 
 logger = logging.getLogger(__name__)
+
+
+def index(request):
+    return render(request, 'mail.html')
 
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+    {% csrf_token %}
+    {% verbatim %}
+    <div id="app">
+        <v-app>
+        <v-main>
+            <v-container>
+                <v-simple-table>
+                    <template v-slot:default>
+                        <thead> 
+                            <tr> 
+                                <th class="text-left"> id </th> 
+                                <th class="text-left"> Номер </th>
+                                <th class="text-left"> Текст </th>
+                                <th class="text-left"> Статус </th>
+                                <th class="text-left"> Время </th>
+                            </tr> 
+                        </thead>
+                        <tbody> 
+                            <tr v-for="item in el.data.content" :key="item.name" > 
+                                <td>{{ item.id }}</td> 
+                                <td>{{ item.subject }}</td>
+                                <td>{{ item.text }}</td>
+                                <td>{{ item.delivered }}</td>
+                                <td>{{ change_time_format(item.createdDate) }}</td>
+                                
+                            </tr> 
+                        </tbody>
+                    </template>
+                </v-simple-table>
+                <div class="text-center">
+                    <v-pagination v-model="page" :length="pages_count" circle @input="get_messeges()"></v-pagination>
+                </div>
+            </v-container>
+        </v-main>
+        </v-app>
+    </div>
+    {% endverbatim %}
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+        let csrf_token = "{{ csrf_token }}";
+        const app = new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+            data: {
+                el: [],
+                headers: [
+                { text: 'id', value: 'id' },
+                { text: 'Номер', value: 'subject' },
+                { text: 'Текст', value: 'text' },
+                { text: 'Статус', value: 'delivered' },
+                { text: 'Время', value: 'createdDate'}
+                ],
+                page: 1,
+                pages_count: 4
+            },
+            methods:{
+                get_messeges: async function () {
+                    let url = 'http://10.18.8.14:8085/api/v1/email/messages?page=' + (this.page - 1);
+                    let response = await fetch(url);
+                    this.el = await response.json();
+                    this.pages_count = this.el.data.totalPages
+                },
+                change_time_format: function (time) {
+                    var options = {
+                      year: 'numeric',
+                      month: 'numeric',
+                      day: 'numeric',
+                      hour: 'numeric',
+                      minute: 'numeric',
+                      timezone: 'UTC',
+                    };
+              
+                    if (typeof time != 'undefined') {
+                      let s = new Date(time).toLocaleString('ru', options);
+                      return s;
+                    } else {
+                      return '';
+                    }
+                },
+            },
+            computed: {
+            },
+            mounted: function async(){
+                this.get_messeges()
+            },
+        })
+    </script>
+</body>
+</html>
